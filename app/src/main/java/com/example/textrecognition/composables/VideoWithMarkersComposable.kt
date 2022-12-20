@@ -39,19 +39,7 @@ fun VideoWithMarkers(
         val scaleW = measurables.first().scaleW(preview.width, widthDif)
         val scaleH = measurables.first().scaleH(preview.height, heightDif)
 
-        val detectedCanvas = measurables[1].run {
-            measure(
-                constraints.copy(
-                    minWidth = preview.width + widthDif,
-                    maxWidth = preview.width + widthDif,
-                    minHeight = preview.height + heightDif,
-                    maxHeight = preview.height + heightDif,
-                )
-
-            )
-        }
-
-        val detectedText = measurables.takeLast(measurables.size - 2).map {
+        val detectedText = measurables.takeLast(measurables.size - 1).map {
             val detectedTextSize = it.parentData as DetectedTextSizeParentData
             it.measure(
                 constraints.copy(
@@ -65,7 +53,6 @@ fun VideoWithMarkers(
 
         layout(constraints.maxWidth, constraints.maxHeight) {
             preview.placeRelative(x = 0, y = 0)
-            detectedCanvas.placeRelative(x = -widthDif / 2, y = -heightDif / 2)
 
             detectedText.forEach {
                 val detectedTextSize = it.parentData as DetectedTextSizeParentData

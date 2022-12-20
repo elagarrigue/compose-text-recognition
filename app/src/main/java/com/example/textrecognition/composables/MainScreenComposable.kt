@@ -41,10 +41,8 @@ fun TextRecognitionView() {
             objectDetectorImageAnalyzer
         )
 
-        DetectedText(detectedObjects)
-
         detectedObjects.textBlocks.map { 
-            DetectedText2(textBlock = it)
+            DetectedText(textBlock = it)
         }
     }
 }
