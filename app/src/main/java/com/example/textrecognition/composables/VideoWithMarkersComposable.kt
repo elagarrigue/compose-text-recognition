@@ -51,7 +51,7 @@ fun VideoWithMarkers(
             )
         }
 
-        val firstText = measurables.getOrNull(2)?.let {
+        val detectedText = measurables.takeLast(measurables.size - 2).map {
             val detectedTextSize = it.parentData as DetectedTextSizeParentData
             it.measure(
                 constraints.copy(
@@ -67,7 +67,7 @@ fun VideoWithMarkers(
             preview.placeRelative(x = 0, y = 0)
             detectedCanvas.placeRelative(x = -widthDif / 2, y = -heightDif / 2)
 
-            firstText?.let {
+            detectedText.forEach {
                 val detectedTextSize = it.parentData as DetectedTextSizeParentData
 
                 val x = adjustX(
