@@ -4,7 +4,6 @@ import android.graphics.Rect
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.unit.Density
 
@@ -32,12 +31,24 @@ fun VideoWithMarkers(
 
         val detectedImageSize = measurables.first().parentData as DetectedImageSizeParentData
 
+        val heightDif = heightDiff(
+            detectedImageSize.width,
+            detectedImageSize.height,
+            preview.width,
+            preview.height
+        )
+        val widthDif = widthDiff(
+            detectedImageSize.width,
+            detectedImageSize.height,
+            preview.width,
+            preview.height
+        )
 
-        val heightDif = measurables.first().heightDiff(preview.width, preview.height)
-        val widthDif = measurables.first().widthDiff(preview.width, preview.height)
+        val previewAdjustedWidth = preview.width + widthDif
+        val previewAdjustedHeight = preview.height + heightDif
 
-        val scaleW = measurables.first().scaleW(preview.width, widthDif)
-        val scaleH = measurables.first().scaleH(preview.height, heightDif)
+        val scaleW = scaleW(detectedImageSize.width, previewAdjustedWidth)
+        val scaleH = scaleH(detectedImageSize.height, previewAdjustedHeight)
 
         val detectedText = measurables.takeLast(measurables.size - 1).map {
             val detectedTextSize = it.parentData as DetectedTextSizeParentData
@@ -59,12 +70,12 @@ fun VideoWithMarkers(
 
                 val x = adjustX(
                     detectedTextSize.rect.left,
-                    preview.width + widthDif,
+                    previewAdjustedWidth,
                     detectedImageSize.width
                 )
                 val y = adjustY(
                     detectedTextSize.rect.top,
-                    preview.height + heightDif,
+                    previewAdjustedHeight,
                     detectedImageSize.height
                 )
 
@@ -74,13 +85,16 @@ fun VideoWithMarkers(
     }
 }
 
-private fun Measurable.heightDiff(targetWidth: Int, targetHeight: Int): Int {
-
-    val detectedImageSize = parentData as DetectedImageSizeParentData
+private fun heightDiff(
+    detectedWidth: Int,
+    detectedHeight: Int,
+    targetWidth: Int,
+    targetHeight: Int
+): Int {
 
     val previewHeight =
-        if (detectedImageSize.width > 0)
-            targetWidth * detectedImageSize.height / detectedImageSize.width
+        if (detectedWidth > 0)
+            targetWidth * detectedHeight / detectedWidth
         else targetHeight
 
     val heightDiff = previewHeight - targetHeight
@@ -88,13 +102,15 @@ private fun Measurable.heightDiff(targetWidth: Int, targetHeight: Int): Int {
     return if (heightDiff > 0) heightDiff else 0
 }
 
-private fun Measurable.widthDiff(targetWidth: Int, targetHeight: Int): Int {
-
-    val detectedImageSizeParentData = parentData as DetectedImageSizeParentData
+private fun widthDiff(
+    detectedWidth: Int,
+    detectedHeight: Int,
+    targetWidth: Int, targetHeight: Int
+): Int {
 
     val previewWidth =
-        if (detectedImageSizeParentData.height > 0)
-            targetHeight * detectedImageSizeParentData.width / detectedImageSizeParentData.height
+        if (detectedHeight > 0)
+            targetHeight * detectedWidth / detectedHeight
         else targetWidth
 
     val heightDiff = previewWidth - targetWidth
@@ -102,32 +118,22 @@ private fun Measurable.widthDiff(targetWidth: Int, targetHeight: Int): Int {
     return if (heightDiff > 0) heightDiff else 0
 }
 
-private fun Measurable.scaleH(targetHeight: Int, heightDif: Int): Float {
-
-    val detectedImageSizeParentData = parentData as DetectedImageSizeParentData
-
-    return if (detectedImageSizeParentData.height > 0) (targetHeight + heightDif).toFloat() / detectedImageSizeParentData.height.toFloat()
+private fun scaleH(detectedHeight: Int, targetHeight: Int): Float {
+    return if (detectedHeight > 0) targetHeight.toFloat() / detectedHeight.toFloat()
     else 1f
 }
 
-private fun Measurable.scaleW(targetWidth: Int, widthDif: Int): Float {
-
-    val detectedImageSizeParentData = parentData as DetectedImageSizeParentData
-
-    return if (detectedImageSizeParentData.width > 0) (targetWidth + widthDif).toFloat() / detectedImageSizeParentData.width.toFloat()
+private fun scaleW(detectedWidth: Int, targetWidth: Int): Float {
+    return if (detectedWidth > 0) targetWidth.toFloat() / detectedWidth.toFloat()
     else 1f
 }
 
 private fun adjustX(x: Int, targetWidth: Int, detectedWidth: Int): Int {
-
     return if (detectedWidth > 0) targetWidth * x / detectedWidth
     else 0
-
 }
 
 private fun adjustY(y: Int, targetHeight: Int, detectedHeight: Int): Int {
-
     return if (detectedHeight > 0) targetHeight * y / detectedHeight
     else 0
-
 }
