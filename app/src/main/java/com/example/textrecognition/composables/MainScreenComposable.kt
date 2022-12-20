@@ -42,5 +42,9 @@ fun TextRecognitionView() {
         )
 
         DetectedText(detectedObjects)
+
+        detectedObjects.textBlocks.map { 
+            DetectedText2(textBlock = it)
+        }
     }
 }

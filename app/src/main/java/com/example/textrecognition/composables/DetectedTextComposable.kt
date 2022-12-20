@@ -1,13 +1,20 @@
 package com.example.textrecognition.composables
 
 import android.graphics.Rect
+import android.util.Log
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import com.example.textrecognition.imageanalizer.DetectedTextBlocks
+import com.google.mlkit.vision.text.Text
 
 @Composable
 fun DetectedText(detectedTextBlocksObjects: DetectedTextBlocks) {
@@ -46,3 +53,24 @@ private fun Rect?.adjustedPosition(w1: Int, h1: Int, w2: Int, h2: Int): Rect {
 }
 
 private fun Int.correct(n: Int, m: Int) = this * m / n
+
+
+@Composable
+fun DetectedText2(textBlock: Text.TextBlock) {
+    Box(
+        modifier = Modifier
+            .background(Color.Red.copy(alpha = 0.5f))
+            .detectedTextSize(textBlock.boundingBox)
+            .clickable {
+                Log.e("EMM", "Clicked ${textBlock.text}")
+            }
+    ) {
+
+        Text(modifier = Modifier.fillMaxSize(), text = textBlock.text)
+    }
+
+}
+
+private fun Modifier.detectedTextSize(rect: Rect?) =
+    this.then(DetectedTextSizeParentData(rect ?: Rect()))
+
