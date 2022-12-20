@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import com.example.textrecognition.DetectedTextBlocks
+import com.example.textrecognition.imageanalizer.DetectedTextBlocks
 
 @Composable
 fun DetectedText(detectedTextBlocksObjects: DetectedTextBlocks) {

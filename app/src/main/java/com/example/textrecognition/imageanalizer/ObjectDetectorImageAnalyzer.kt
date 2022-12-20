@@ -1,4 +1,4 @@
-package com.example.textrecognition
+package com.example.textrecognition.imageanalizer
 
 import android.annotation.SuppressLint
 import androidx.camera.core.ImageAnalysis

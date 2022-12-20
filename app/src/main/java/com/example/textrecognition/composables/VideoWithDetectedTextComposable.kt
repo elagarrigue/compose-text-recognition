@@ -7,7 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.example.textrecognition.ObjectDetectorImageAnalyzer
+import com.example.textrecognition.imageanalizer.ObjectDetectorImageAnalyzer
 import com.google.mlkit.vision.text.TextRecognition
 
 
