@@ -1,7 +1,6 @@
 package com.example.textrecognition.composables
 
 import android.graphics.Rect
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,13 +12,13 @@ import androidx.compose.ui.graphics.Color
 import com.google.mlkit.vision.text.Text
 
 @Composable
-fun DetectedText(textBlock: Text.TextBlock) {
+fun DetectedText(textBlock: Text.TextBlock, onTextClicked: (String) -> Unit) {
     Box(
         modifier = Modifier
             .background(Color.Red.copy(alpha = 0.5f))
             .detectedTextSize(textBlock.boundingBox)
             .clickable {
-                Log.e("EMM", "Clicked ${textBlock.text}")
+                onTextClicked(textBlock.text)
             }
     ) {
 
