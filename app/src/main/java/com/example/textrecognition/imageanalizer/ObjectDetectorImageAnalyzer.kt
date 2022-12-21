@@ -13,15 +13,19 @@ import kotlinx.coroutines.flow.update
 data class DetectedTextBlocks(
     val imageProxyWidth: Int = 0,
     val imageProxyHeight: Int = 0,
-    val textBlocks: List<Text.TextBlock> = listOf()
+    val textBlocks: List<Text.Line> = listOf()
 )
 
 class ObjectDetectorImageAnalyzer(
     private val textRecognizer: TextRecognizer,
+    private val regex: Regex
 ) : ImageAnalysis.Analyzer {
 
 
     val boxFlow = MutableStateFlow(DetectedTextBlocks())
+
+    private val debounceTime = 200L
+    private var timeStamp = 0L
 
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(imageProxy: ImageProxy) {
@@ -36,11 +40,22 @@ class ObjectDetectorImageAnalyzer(
                     imageProxy.close()
                 }
                 .addOnSuccessListener { text ->
-                    val w = if (rotationDegrees == 0) imageProxy.width else imageProxy.height
-                    val h = if (rotationDegrees == 0) imageProxy.height else imageProxy.width
+                    if(System.currentTimeMillis() - timeStamp > debounceTime) {
+                        timeStamp = System.currentTimeMillis()
 
-                    boxFlow.update {
-                        DetectedTextBlocks(w, h, text.textBlocks)
+                        val w = if (rotationDegrees == 0) imageProxy.width else imageProxy.height
+                        val h = if (rotationDegrees == 0) imageProxy.height else imageProxy.width
+
+                        boxFlow.update {
+                            DetectedTextBlocks(
+                                w,
+                                h,
+                                text.textBlocks.flatMap { it.lines }
+                                    .filter {
+                                        it.text.contains(regex) // TODO: this is not working
+                                    }
+                            )
+                        }
                     }
                 }
         }

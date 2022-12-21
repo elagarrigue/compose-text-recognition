@@ -27,6 +27,7 @@ import com.example.textrecognition.ui.theme.TextRecognitionTheme
 
 
 private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST = 34
+private const val PHONE_NUMBER_PATTER = "^(1\\s?)?(\\d{3}|\\(\\d{3}\\))[\\s\\-]?\\d{3}[\\s\\-]?\\d{4}\$"
 private fun foregroundPermissionApproved(context: Context): Boolean {
     return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(
         context, Manifest.permission.CAMERA
@@ -63,10 +64,13 @@ class MainActivity : ComponentActivity() {
                     ) {
                         requestForegroundPermission(this@MainActivity)
 
-                        MLKitTextRecognition {
-                            openDialog = true
-                            text = it
-                        }
+                        MLKitTextRecognition(
+                            onTextClicked = {
+                                openDialog = true
+                                text = it
+                            },
+                            regex = Regex(PHONE_NUMBER_PATTER)
+                        )
                     }
 
                     if (openDialog) {

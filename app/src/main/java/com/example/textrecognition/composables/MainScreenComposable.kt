@@ -12,20 +12,20 @@ import com.google.mlkit.vision.text.TextRecognition
 
 
 @Composable
-fun MLKitTextRecognition(onTextClicked: (String) -> Unit) {
+fun MLKitTextRecognition(onTextClicked: (String) -> Unit, regex: Regex) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        TextRecognitionView(onTextClicked)
+        TextRecognitionView(onTextClicked, regex)
     }
 }
 
 @Composable
-fun TextRecognitionView(onTextClicked: (String) -> Unit) {
+fun TextRecognitionView(onTextClicked: (String) -> Unit, regex: Regex) {
 
     val textRecognizer = remember { TextRecognition.getClient() }
     val objectDetectorImageAnalyzer = remember {
-        ObjectDetectorImageAnalyzer(textRecognizer)
+        ObjectDetectorImageAnalyzer(textRecognizer, regex)
     }
 
     val detectedObjects by objectDetectorImageAnalyzer.boxFlow.collectAsState()
@@ -42,7 +42,7 @@ fun TextRecognitionView(onTextClicked: (String) -> Unit) {
         )
 
         detectedObjects.textBlocks.map {
-            DetectedText(textBlock = it, onTextClicked)
+            DetectedText(textElement = it, onTextClicked)
         }
     }
 }
