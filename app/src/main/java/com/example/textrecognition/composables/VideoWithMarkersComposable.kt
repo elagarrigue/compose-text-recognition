@@ -8,12 +8,10 @@ import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.unit.Density
 
 class DetectedImageSizeParentData(val width: Int, val height: Int) : ParentDataModifier {
-
     override fun Density.modifyParentData(parentData: Any?) = this@DetectedImageSizeParentData
 }
 
 class DetectedTextSizeParentData(val rect: Rect) : ParentDataModifier {
-
     override fun Density.modifyParentData(parentData: Any?) = this@DetectedTextSizeParentData
 }
 
@@ -22,31 +20,25 @@ fun VideoWithMarkers(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-
-    val detectedObjectPositionState = rememberDetectedObjectPositionState()
-
     Layout(
         modifier = modifier,
         content = content
     ) { measurables, constraints ->
 
         val preview = measurables.first().measure(constraints)
-
         val detectedImageSize = measurables.first().parentData as DetectedImageSizeParentData
-
-        val adjustedValues = detectedObjectPositionState.getAdjustedValues(
+        val detectedState = DetectedObjectPositionState(
             detectedImageSize.width, detectedImageSize.height, preview.width, preview.height
         )
 
-
         val detectedText = measurables.takeLast(measurables.size - 1).map {
-            val detectedTextSize = it.parentData as DetectedTextSizeParentData
+            val detectedTextRect = (it.parentData as DetectedTextSizeParentData).rect
             it.measure(
                 constraints.copy(
-                    minWidth = (detectedTextSize.rect.width() * adjustedValues.scaleW).toInt(),
-                    maxWidth = (detectedTextSize.rect.width() * adjustedValues.scaleW).toInt(),
-                    minHeight = (detectedTextSize.rect.height() * adjustedValues.scaleH).toInt(),
-                    maxHeight = (detectedTextSize.rect.height() * adjustedValues.scaleH).toInt(),
+                    minWidth = (detectedTextRect.width() * detectedState.scaleW).toInt(),
+                    maxWidth = (detectedTextRect.width() * detectedState.scaleW).toInt(),
+                    minHeight = (detectedTextRect.height() * detectedState.scaleH).toInt(),
+                    maxHeight = (detectedTextRect.height() * detectedState.scaleH).toInt(),
                 )
             )
         }
@@ -55,22 +47,13 @@ fun VideoWithMarkers(
             preview.placeRelative(x = 0, y = 0)
 
             detectedText.forEach {
-                val detectedTextSize = it.parentData as DetectedTextSizeParentData
-
-                val x = detectedObjectPositionState.adjustX(
-                    detectedTextSize.rect.left,
-                    adjustedValues.previewAdjustedWidth,
-                    detectedImageSize.width
-                )
-                val y = detectedObjectPositionState.adjustY(
-                    detectedTextSize.rect.top,
-                    adjustedValues.previewAdjustedHeight,
-                    detectedImageSize.height
-                )
+                val detectedTextRect = (it.parentData as DetectedTextSizeParentData).rect
+                val x = detectedState.adjustX(detectedTextRect.left)
+                val y = detectedState.adjustY(detectedTextRect.top)
 
                 it.placeRelative(
-                    x = x - adjustedValues.widthDif / 2,
-                    y = y - adjustedValues.heightDif / 2
+                    x = x - detectedState.widthDif / 2,
+                    y = y - detectedState.heightDif / 2
                 )
             }
         }

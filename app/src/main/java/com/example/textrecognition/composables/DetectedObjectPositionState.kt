@@ -1,59 +1,47 @@
 package com.example.textrecognition.composables
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+class DetectedObjectPositionState(
+    private val detectedWidth: Int,
+    private val detectedHeight: Int,
+    targetWidth: Int,
+    targetHeight: Int
+) {
 
-data class AdjustedValues(
-    val heightDif: Int,
-    val widthDif: Int,
-    val previewAdjustedWidth: Int,
-    val previewAdjustedHeight: Int,
-    val scaleW: Float,
-    val scaleH: Float,
-)
+    private val previewAdjustedWidth: Int
+    private val previewAdjustedHeight: Int
+    val heightDif: Int
+    val widthDif: Int
+    val scaleW: Float
+    val scaleH: Float
 
-class DetectedObjectPositionState {
-
-    fun getAdjustedValues(
-        detectedWidth: Int,
-        detectedHeight: Int,
-        targetWidth: Int,
-        targetHeight: Int
-    ): AdjustedValues {
-
-
-        val heightDif = heightDiff(
+    init {
+        heightDif = heightDiff(
             detectedWidth,
             detectedHeight,
             targetWidth,
             targetHeight
         )
-        val widthDif = widthDiff(
+        widthDif = widthDiff(
             detectedWidth,
             detectedHeight,
             targetWidth,
             targetHeight
         )
-        val previewAdjustedWidth = targetWidth + widthDif
-        val previewAdjustedHeight = targetHeight + heightDif
+        previewAdjustedWidth = targetWidth + widthDif
+        previewAdjustedHeight = targetHeight + heightDif
 
-        return AdjustedValues(
-            heightDif = heightDif,
-            widthDif = widthDif,
-            previewAdjustedWidth = previewAdjustedWidth,
-            previewAdjustedHeight = previewAdjustedHeight,
-            scaleW = scaleW(detectedWidth, previewAdjustedWidth),
-            scaleH = scaleH(detectedHeight, previewAdjustedHeight)
-        )
+        scaleW = scaleW(detectedWidth, previewAdjustedWidth)
+        scaleH = scaleH(detectedHeight, previewAdjustedHeight)
+
     }
 
-    fun adjustX(x: Int, targetWidth: Int, detectedWidth: Int): Int {
-        return if (detectedWidth > 0) targetWidth * x / detectedWidth
+    fun adjustX(x: Int): Int {
+        return if (detectedWidth > 0) previewAdjustedWidth * x / detectedWidth
         else 0
     }
 
-    fun adjustY(y: Int, targetHeight: Int, detectedHeight: Int): Int {
-        return if (detectedHeight > 0) targetHeight * y / detectedHeight
+    fun adjustY(y: Int): Int {
+        return if (detectedHeight > 0) previewAdjustedHeight * y / detectedHeight
         else 0
     }
 
@@ -100,9 +88,4 @@ class DetectedObjectPositionState {
         else 1f
     }
 
-}
-
-@Composable
-fun rememberDetectedObjectPositionState() = remember {
-    DetectedObjectPositionState()
 }
