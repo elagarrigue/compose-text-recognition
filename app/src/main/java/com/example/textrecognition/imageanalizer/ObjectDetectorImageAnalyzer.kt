@@ -17,8 +17,7 @@ data class DetectedTextBlocks(
 )
 
 class ObjectDetectorImageAnalyzer(
-    private val textRecognizer: TextRecognizer,
-    private val regex: Regex
+    private val textRecognizer: TextRecognizer
 ) : ImageAnalysis.Analyzer {
 
 
@@ -51,9 +50,6 @@ class ObjectDetectorImageAnalyzer(
                                 w,
                                 h,
                                 text.textBlocks.flatMap { it.lines }
-                                    .filter {
-                                        it.text.contains(regex) // TODO: this is not working
-                                    }
                             )
                         }
                     }

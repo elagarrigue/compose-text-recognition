@@ -13,20 +13,20 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
 
 @Composable
-fun MLKitTextRecognition(onTextClicked: (String) -> Unit, regex: Regex) {
+fun MLKitTextRecognition(onTextClicked: (String) -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        TextRecognitionView(onTextClicked, regex)
+        TextRecognitionView(onTextClicked)
     }
 }
 
 @Composable
-fun TextRecognitionView(onTextClicked: (String) -> Unit, regex: Regex) {
+fun TextRecognitionView(onTextClicked: (String) -> Unit) {
 
     val textRecognizer = remember { TextRecognition.getClient(TextRecognizerOptions.Builder().build()) }
     val objectDetectorImageAnalyzer = remember {
-        ObjectDetectorImageAnalyzer(textRecognizer, regex)
+        ObjectDetectorImageAnalyzer(textRecognizer)
     }
 
     val detectedObjects by objectDetectorImageAnalyzer.boxFlow.collectAsState()
