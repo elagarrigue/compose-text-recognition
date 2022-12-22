@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.example.textrecognition.imageanalizer.ObjectDetectorImageAnalyzer
 import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
 
 @Composable
@@ -23,7 +24,7 @@ fun MLKitTextRecognition(onTextClicked: (String) -> Unit, regex: Regex) {
 @Composable
 fun TextRecognitionView(onTextClicked: (String) -> Unit, regex: Regex) {
 
-    val textRecognizer = remember { TextRecognition.getClient() }
+    val textRecognizer = remember { TextRecognition.getClient(TextRecognizerOptions.Builder().build()) }
     val objectDetectorImageAnalyzer = remember {
         ObjectDetectorImageAnalyzer(textRecognizer, regex)
     }
