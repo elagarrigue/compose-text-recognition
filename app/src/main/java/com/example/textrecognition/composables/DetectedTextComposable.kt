@@ -12,13 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.google.mlkit.vision.text.Text
+import com.example.textrecognition.imageanalizer.DetectedTextBlocks
 
 @Composable
-fun DetectedText(textElement: Text.Line, onTextClicked: (String) -> Unit) {
+fun DetectedText(textElement: DetectedTextBlocks.DetectedText, onTextClicked: (String) -> Unit) {
     Box(
         modifier = Modifier
-            .detectedTextSize(textElement.boundingBox)
+            .detectedTextSize(textElement.rect)
             .clip(RoundedCornerShape(size = 12.dp))
             .background(Color.Yellow.copy(alpha = 0.5f))
             .clickable {

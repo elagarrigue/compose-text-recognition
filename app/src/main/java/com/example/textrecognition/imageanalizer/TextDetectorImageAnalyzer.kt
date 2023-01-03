@@ -1,6 +1,7 @@
 package com.example.textrecognition.imageanalizer
 
 import android.annotation.SuppressLint
+import android.graphics.Rect
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.common.InputImage
@@ -13,8 +14,10 @@ import kotlinx.coroutines.flow.update
 data class DetectedTextBlocks(
     val imageProxyWidth: Int = 0,
     val imageProxyHeight: Int = 0,
-    val textBlocks: List<Text.Line> = listOf()
-)
+    val textBlocks: List<DetectedText> = listOf()
+) {
+    data class DetectedText(val text: String, val rect: Rect?)
+}
 
 class TextDetectorImageAnalyzer(
     private val textRecognizer: TextRecognizer
@@ -39,7 +42,7 @@ class TextDetectorImageAnalyzer(
                     imageProxy.close()
                 }
                 .addOnSuccessListener { text ->
-                    if(System.currentTimeMillis() - timeStamp > debounceTime) {
+                    if (System.currentTimeMillis() - timeStamp > debounceTime) {
                         timeStamp = System.currentTimeMillis()
 
                         val w = if (rotationDegrees == 0) imageProxy.width else imageProxy.height
@@ -49,7 +52,7 @@ class TextDetectorImageAnalyzer(
                             DetectedTextBlocks(
                                 w,
                                 h,
-                                text.textBlocks.flatMap { it.lines }
+                                text.textBlocks.toDetectedLines()
                             )
                         }
                     }
@@ -57,3 +60,10 @@ class TextDetectorImageAnalyzer(
         }
     }
 }
+
+private fun List<Text.TextBlock>.toDetectedLines(): List<DetectedTextBlocks.DetectedText> =
+    flatMap {
+        it.lines.map {
+            DetectedTextBlocks.DetectedText(it.text, it.boundingBox)
+        }
+    }
