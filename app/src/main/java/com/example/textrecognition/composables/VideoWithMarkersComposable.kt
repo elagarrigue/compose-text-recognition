@@ -25,13 +25,13 @@ fun VideoWithMarkers(
         content = content
     ) { measurables, constraints ->
 
-        val preview = measurables.first().measure(constraints)
-        val detectedImageSize = measurables.first().parentData as DetectedImageSizeParentData
+        val preview = measurables.first { it.parentData is DetectedImageSizeParentData }.measure(constraints)
+        val detectedImageSize = preview.parentData as DetectedImageSizeParentData
         val detectedState = DetectedObjectPositionState(
             detectedImageSize.width, detectedImageSize.height, preview.width, preview.height
         )
 
-        val detectedText = measurables.takeLast(measurables.size - 1).map {
+        val detectedText = measurables.filter { it.parentData is DetectedTextSizeParentData }.map {
             val detectedTextRect = (it.parentData as DetectedTextSizeParentData).rect
             it.measure(
                 constraints.copy(
