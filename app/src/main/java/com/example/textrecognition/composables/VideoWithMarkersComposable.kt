@@ -27,7 +27,7 @@ fun VideoWithMarkers(
 
         val preview = measurables.first { it.parentData is DetectedImageSizeParentData }.measure(constraints)
         val detectedImageSize = preview.parentData as DetectedImageSizeParentData
-        val detectedState = DetectedObjectPositionState(
+        val detectedState = DetectedTextPositionState(
             detectedImageSize.width, detectedImageSize.height, preview.width, preview.height
         )
 

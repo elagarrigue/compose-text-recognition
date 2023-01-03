@@ -1,6 +1,6 @@
 package com.example.textrecognition.composables
 
-class DetectedObjectPositionState(
+class DetectedTextPositionState(
     private val detectedWidth: Int,
     private val detectedHeight: Int,
     targetWidth: Int,
