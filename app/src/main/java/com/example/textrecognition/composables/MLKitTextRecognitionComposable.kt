@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layoutId
 import com.example.textrecognition.imageanalizer.TextDetectorImageAnalyzer
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
@@ -23,12 +24,13 @@ fun MLKitTextRecognition(onTextClicked: (String) -> Unit) {
     val detectedObjects by textDetectorImageAnalyzer.detectedTextBlocksFlow.collectAsState()
 
     VideoWithMarkers(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        detectedObjects.imageProxyWidth,
+        detectedObjects.imageProxyHeight,
     ) {
 
         CameraPreview(
-            detectedObjects.imageProxyWidth,
-            detectedObjects.imageProxyHeight,
+            Modifier.layoutId("preview"),
             textDetectorImageAnalyzer
         )
 

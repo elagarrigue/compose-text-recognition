@@ -21,7 +21,7 @@ import com.example.textrecognition.imageanalizer.TextDetectorImageAnalyzer
 import java.util.concurrent.Executors
 
 @Composable
-fun CameraPreview(imageProxyWidth: Int, imageProxyHeight: Int, objectDetectorImageAnalyzer: TextDetectorImageAnalyzer) {
+fun CameraPreview(modifier: Modifier, objectDetectorImageAnalyzer: TextDetectorImageAnalyzer) {
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -33,10 +33,13 @@ fun CameraPreview(imageProxyWidth: Int, imageProxyHeight: Int, objectDetectorIma
     val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
 
     AndroidView(
-        modifier = Modifier.previewSize(imageProxyWidth, imageProxyHeight),
+        modifier = modifier,
         factory = { ctx ->
             val previewView = PreviewView(ctx).apply {
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                layoutParams = LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
                 scaleType = PreviewView.ScaleType.FILL_CENTER
                 implementationMode = PreviewView.ImplementationMode.COMPATIBLE
             }
@@ -67,6 +70,3 @@ fun CameraPreview(imageProxyWidth: Int, imageProxyHeight: Int, objectDetectorIma
         }
     )
 }
-
-private fun Modifier.previewSize(width: Int, height: Int) =
-    this.then(DetectedImageSizeParentData(width, height))

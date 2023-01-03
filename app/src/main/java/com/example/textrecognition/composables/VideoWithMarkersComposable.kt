@@ -7,12 +7,9 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.layout.Placeable
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
-
-class DetectedImageSizeParentData(val width: Int, val height: Int) : ParentDataModifier {
-    override fun Density.modifyParentData(parentData: Any?) = this@DetectedImageSizeParentData
-}
 
 class DetectedTextRectParentData(val rect: Rect) : ParentDataModifier {
     override fun Density.modifyParentData(parentData: Any?) = this@DetectedTextRectParentData
@@ -21,6 +18,7 @@ class DetectedTextRectParentData(val rect: Rect) : ParentDataModifier {
 @Composable
 fun VideoWithMarkers(
     modifier: Modifier = Modifier,
+    detectedImageWidth: Int, detectedImageHeight: Int,
     content: @Composable () -> Unit,
 ) {
     Layout(
@@ -30,9 +28,11 @@ fun VideoWithMarkers(
 
         val preview = measurePreview(measurables, constraints)
 
-        val detectedStateHolder = getDetectedTextPositionStateHolder(preview)
+        val detectedStateHolder =
+            getDetectedTextPositionStateHolder(preview, detectedImageWidth, detectedImageHeight)
 
-        val detectedText = measureDetectedTextElements(measurables, constraints, detectedStateHolder)
+        val detectedText =
+            measureDetectedTextElements(measurables, constraints, detectedStateHolder)
 
         layout(constraints.maxWidth, constraints.maxHeight) {
             placePreview(preview)
@@ -44,13 +44,15 @@ fun VideoWithMarkers(
 private fun measurePreview(
     measurables: List<Measurable>,
     constraints: Constraints
-) = measurables.first { it.parentData is DetectedImageSizeParentData }.measure(constraints)
+) = measurables.first { it.layoutId == "preview" }.measure(constraints)
 
-private fun getDetectedTextPositionStateHolder(preview: Placeable): DetectedTextPositionState {
-    val detectedImageSize = preview.parentData as DetectedImageSizeParentData
-
+private fun getDetectedTextPositionStateHolder(
+    preview: Placeable,
+    detectedImageWidth: Int,
+    detectedImageHeight: Int
+): DetectedTextPositionState {
     return DetectedTextPositionState(
-        detectedImageSize.width, detectedImageSize.height, preview.width, preview.height
+        detectedImageWidth, detectedImageHeight, preview.width, preview.height
     )
 }
 
