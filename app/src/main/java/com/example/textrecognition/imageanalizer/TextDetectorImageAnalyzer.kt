@@ -16,7 +16,7 @@ data class DetectedTextBlocks(
     val textBlocks: List<Text.Line> = listOf()
 )
 
-class ObjectDetectorImageAnalyzer(
+class TextDetectorImageAnalyzer(
     private val textRecognizer: TextRecognizer
 ) : ImageAnalysis.Analyzer {
 

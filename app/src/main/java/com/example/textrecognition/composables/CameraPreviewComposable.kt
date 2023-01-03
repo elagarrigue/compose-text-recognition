@@ -17,11 +17,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import com.example.textrecognition.imageanalizer.ObjectDetectorImageAnalyzer
+import com.example.textrecognition.imageanalizer.TextDetectorImageAnalyzer
 import java.util.concurrent.Executors
 
 @Composable
-fun CameraPreview(imageProxyWidth: Int, imageProxyHeight: Int, objectDetectorImageAnalyzer: ObjectDetectorImageAnalyzer) {
+fun CameraPreview(imageProxyWidth: Int, imageProxyHeight: Int, objectDetectorImageAnalyzer: TextDetectorImageAnalyzer) {
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current

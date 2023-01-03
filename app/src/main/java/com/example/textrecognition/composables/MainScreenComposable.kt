@@ -7,7 +7,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.example.textrecognition.imageanalizer.ObjectDetectorImageAnalyzer
+import com.example.textrecognition.imageanalizer.TextDetectorImageAnalyzer
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
@@ -25,11 +25,11 @@ fun MLKitTextRecognition(onTextClicked: (String) -> Unit) {
 fun TextRecognitionView(onTextClicked: (String) -> Unit) {
 
     val textRecognizer = remember { TextRecognition.getClient(TextRecognizerOptions.Builder().build()) }
-    val objectDetectorImageAnalyzer = remember {
-        ObjectDetectorImageAnalyzer(textRecognizer)
+    val textDetectorImageAnalyzer = remember {
+        TextDetectorImageAnalyzer(textRecognizer)
     }
 
-    val detectedObjects by objectDetectorImageAnalyzer.boxFlow.collectAsState()
+    val detectedObjects by textDetectorImageAnalyzer.boxFlow.collectAsState()
 
     VideoWithMarkers(
         modifier = Modifier
@@ -39,7 +39,7 @@ fun TextRecognitionView(onTextClicked: (String) -> Unit) {
         CameraPreview(
             detectedObjects.imageProxyWidth,
             detectedObjects.imageProxyHeight,
-            objectDetectorImageAnalyzer
+            textDetectorImageAnalyzer
         )
 
         detectedObjects.textBlocks.map {
