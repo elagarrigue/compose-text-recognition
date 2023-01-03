@@ -15,7 +15,7 @@ import com.example.textrecognition.imageanalizer.DetectedTextBlocks
 fun DetectedText(textElement: DetectedTextBlocks.DetectedText, onTextClicked: (String) -> Unit) {
     Canvas(
         modifier = Modifier
-            .detectedTextSize(textElement.rect)
+            .detectedTextRect(textElement.rect)
             .clip(RoundedCornerShape(size = 12.dp))
             .clickable {
                 onTextClicked(textElement.text)
@@ -25,6 +25,6 @@ fun DetectedText(textElement: DetectedTextBlocks.DetectedText, onTextClicked: (S
     }
 }
 
-private fun Modifier.detectedTextSize(rect: Rect?) =
-    this.then(DetectedTextSizeParentData(rect ?: Rect()))
+private fun Modifier.detectedTextRect(rect: Rect?) =
+    this.then(DetectedTextRectParentData(rect ?: Rect()))
 

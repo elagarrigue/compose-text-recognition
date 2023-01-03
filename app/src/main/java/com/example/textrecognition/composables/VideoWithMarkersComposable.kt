@@ -14,8 +14,8 @@ class DetectedImageSizeParentData(val width: Int, val height: Int) : ParentDataM
     override fun Density.modifyParentData(parentData: Any?) = this@DetectedImageSizeParentData
 }
 
-class DetectedTextSizeParentData(val rect: Rect) : ParentDataModifier {
-    override fun Density.modifyParentData(parentData: Any?) = this@DetectedTextSizeParentData
+class DetectedTextRectParentData(val rect: Rect) : ParentDataModifier {
+    override fun Density.modifyParentData(parentData: Any?) = this@DetectedTextRectParentData
 }
 
 @Composable
@@ -58,8 +58,8 @@ private fun measureDetectedTextElements(
     measurables: List<Measurable>,
     constraints: Constraints,
     detectedState: DetectedTextPositionState
-) = measurables.filter { it.parentData is DetectedTextSizeParentData }.map {
-    val detectedTextRect = (it.parentData as DetectedTextSizeParentData).rect
+) = measurables.filter { it.parentData is DetectedTextRectParentData }.map {
+    val detectedTextRect = (it.parentData as DetectedTextRectParentData).rect
     it.measure(
         constraints.copy(
             minWidth = (detectedTextRect.width() * detectedState.scaleW).toInt(),
@@ -79,7 +79,7 @@ private fun Placeable.PlacementScope.placeDetectedText(
     detectedState: DetectedTextPositionState
 ) {
     detectedText.forEach {
-        val detectedTextRect = (it.parentData as DetectedTextSizeParentData).rect
+        val detectedTextRect = (it.parentData as DetectedTextRectParentData).rect
         val x = detectedState.adjustX(detectedTextRect.left)
         val y = detectedState.adjustY(detectedTextRect.top)
 
