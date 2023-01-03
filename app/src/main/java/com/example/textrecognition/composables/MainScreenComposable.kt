@@ -1,6 +1,5 @@
 package com.example.textrecognition.composables
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,26 +13,17 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
 @Composable
 fun MLKitTextRecognition(onTextClicked: (String) -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        TextRecognitionView(onTextClicked)
-    }
-}
 
-@Composable
-fun TextRecognitionView(onTextClicked: (String) -> Unit) {
-
-    val textRecognizer = remember { TextRecognition.getClient(TextRecognizerOptions.Builder().build()) }
+    val textRecognizer =
+        remember { TextRecognition.getClient(TextRecognizerOptions.Builder().build()) }
     val textDetectorImageAnalyzer = remember {
         TextDetectorImageAnalyzer(textRecognizer)
     }
 
-    val detectedObjects by textDetectorImageAnalyzer.boxFlow.collectAsState()
+    val detectedObjects by textDetectorImageAnalyzer.detectedTextBlocksFlow.collectAsState()
 
     VideoWithMarkers(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
 
         CameraPreview(

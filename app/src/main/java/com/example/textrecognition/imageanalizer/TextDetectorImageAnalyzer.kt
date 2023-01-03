@@ -24,7 +24,7 @@ class TextDetectorImageAnalyzer(
 ) : ImageAnalysis.Analyzer {
 
 
-    val boxFlow = MutableStateFlow(DetectedTextBlocks())
+    val detectedTextBlocksFlow = MutableStateFlow(DetectedTextBlocks())
 
     private val debounceTime = 200L
     private var timeStamp = 0L
@@ -48,7 +48,7 @@ class TextDetectorImageAnalyzer(
                         val w = if (rotationDegrees == 0) imageProxy.width else imageProxy.height
                         val h = if (rotationDegrees == 0) imageProxy.height else imageProxy.width
 
-                        boxFlow.update {
+                        detectedTextBlocksFlow.update {
                             DetectedTextBlocks(
                                 w,
                                 h,
