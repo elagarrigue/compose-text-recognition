@@ -11,6 +11,7 @@ import com.example.textrecognition.imageanalizer.TextDetectorImageAnalyzer
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
+const val PREVIEW_ID = "preview"
 
 @Composable
 fun MLKitTextRecognition(onTextClicked: (String) -> Unit) {
@@ -30,7 +31,7 @@ fun MLKitTextRecognition(onTextClicked: (String) -> Unit) {
     ) {
 
         CameraPreview(
-            Modifier.layoutId("preview"),
+            Modifier.layoutId(PREVIEW_ID),
             textDetectorImageAnalyzer
         )
 

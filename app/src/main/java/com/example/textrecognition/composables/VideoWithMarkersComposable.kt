@@ -44,7 +44,7 @@ fun VideoWithMarkers(
 private fun measurePreview(
     measurables: List<Measurable>,
     constraints: Constraints
-) = measurables.first { it.layoutId == "preview" }.measure(constraints)
+) = measurables.first { it.layoutId == PREVIEW_ID }.measure(constraints)
 
 private fun getDetectedTextPositionStateHolder(
     preview: Placeable,
