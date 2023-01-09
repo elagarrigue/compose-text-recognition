@@ -16,7 +16,7 @@ fun DetectedText(textElement: DetectedTextBlocks.DetectedText, onTextClicked: (S
     Canvas(
         modifier = Modifier
             .detectedTextRect(textElement.rect)
-            .clip(RoundedCornerShape(size = 12.dp))
+            .clip(RoundedCornerShape(size = 8.dp))
             .clickable {
                 onTextClicked(textElement.text)
             }

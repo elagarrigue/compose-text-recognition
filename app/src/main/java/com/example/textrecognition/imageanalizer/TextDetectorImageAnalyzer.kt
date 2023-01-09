@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.graphics.Rect
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import com.example.textrecognition.imageanalizer.mapper.DetectedTextMapperStrategy
 import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognizer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -20,7 +20,8 @@ data class DetectedTextBlocks(
 }
 
 class TextDetectorImageAnalyzer(
-    private val textRecognizer: TextRecognizer
+    private val textRecognizer: TextRecognizer,
+    private val detectedTextMapper: DetectedTextMapperStrategy,
 ) : ImageAnalysis.Analyzer {
 
 
@@ -52,7 +53,7 @@ class TextDetectorImageAnalyzer(
                             DetectedTextBlocks(
                                 w,
                                 h,
-                                text.textBlocks.toDetectedLines()
+                                detectedTextMapper.map(text.textBlocks)
                             )
                         }
                     }
@@ -60,10 +61,3 @@ class TextDetectorImageAnalyzer(
         }
     }
 }
-
-private fun List<Text.TextBlock>.toDetectedLines(): List<DetectedTextBlocks.DetectedText> =
-    flatMap {
-        it.lines.map {
-            DetectedTextBlocks.DetectedText(it.text, it.boundingBox)
-        }
-    }

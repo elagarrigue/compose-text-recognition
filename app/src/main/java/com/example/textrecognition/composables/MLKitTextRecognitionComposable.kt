@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
 import com.example.textrecognition.imageanalizer.TextDetectorImageAnalyzer
+import com.example.textrecognition.imageanalizer.mapper.DetectedElementsMapper
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
@@ -18,8 +19,9 @@ fun MLKitTextRecognition(onTextClicked: (String) -> Unit) {
 
     val textRecognizer =
         remember { TextRecognition.getClient(TextRecognizerOptions.Builder().build()) }
+    val detectedTextMapper = remember { DetectedElementsMapper() }
     val textDetectorImageAnalyzer = remember {
-        TextDetectorImageAnalyzer(textRecognizer)
+        TextDetectorImageAnalyzer(textRecognizer, detectedTextMapper)
     }
 
     val detectedObjects by textDetectorImageAnalyzer.detectedTextBlocksFlow.collectAsState()
